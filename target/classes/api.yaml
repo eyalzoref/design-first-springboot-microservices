@@ -1,0 +1,68 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a server definition."
+  version: "1.0.0"
+  title: "Currency Exchange Server Swagger"
+  termsOfService: "http://my.demo.com/terms/"
+  contact:
+    email: "apiteam@demo.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/v2"
+tags:
+- name: "currency exchange"
+  description: "Everything about your currency exchange rate"
+schemes:
+- "http"
+- "https"
+paths:
+  /rate/{base}/{exchange}:
+    get:
+      tags:
+      - "currency exchange"
+      summary: "Get current currency rate exchange according to the specified currency base"
+      description: ""
+      operationId: "getRate"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "base"
+        description: "Currency base for exchange rate calculation. for example: USD"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "exchange"
+        description: "Currency exchange rate calculation. for example: EUR"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid input"
+        404:
+          description: "Curreny not found"
+        401:
+           $ref: '#/responses/unauthorizedError'
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/currencyRate"
+      
+definitions:
+  currencyRate:
+    type: "object"
+    properties:
+      base:
+        type: "string"
+      exchange:
+        type: "string"
+      value:
+        type: "string"
+responses:
+  unauthorizedError:
+    description: Authentication information is missing or invalid
+    headers:
+      WWW_Authenticate:
+        type: string
